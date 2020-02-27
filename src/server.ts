@@ -1,11 +1,12 @@
 require('dotenv').config();
 
-import app from './app';
+const PORT = process.env.PORT || 8080
 
-const PORT = process.env.PORT || 8080;
+const ws = require('./socket');
+const app = require('./app');
 
-(async () => {
-  app.listen(PORT,() => {
-    console.log(`Running on ${ PORT } PORT`);
-  })
-})()
+const server = app.listen(PORT, () => {
+  console.log(`Running on ${ PORT }`)
+});
+
+ws(server);

@@ -1,10 +1,13 @@
+require('dotenv').config()
+
 import * as express from 'express';
-import * as bodyParser from 'body-parser';
 
 const app: express.Application = express();
+const routes = require('./routes');
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: '5mb' }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/', routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -15,4 +18,4 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
   next();
 });
 
-export default app;
+module.exports = app
