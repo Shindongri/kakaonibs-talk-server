@@ -6,6 +6,7 @@
   "author": "shindongri <shindongri89@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "build": "netlify-lambda build src/app.ts",
     "start": "nodemon --exec ts-node ./src/server.ts"
   },
   "dependencies": {
@@ -32,8 +33,10 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "netlify-lambda": "^1.6.3",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
+    "serverless-http": "^2.3.2",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   }
