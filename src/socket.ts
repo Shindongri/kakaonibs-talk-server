@@ -1,3 +1,4 @@
+const { split, flow, replace, size, last } = require('lodash/fp');
 const SocketIO = require('socket.io');
 
 module.exports = (server, app, sessionMiddleware) => {
@@ -7,6 +8,7 @@ module.exports = (server, app, sessionMiddleware) => {
   const room = io.of('/room');
   const chat = io.of('/chat');
 
+  /* Apply Session Middleware */
   io.use((socket, next) => {
     const req = socket.request;
     const res = socket.request.res || {};
@@ -27,8 +29,15 @@ module.exports = (server, app, sessionMiddleware) => {
   chat.on('connection', (socket) => {
     console.log('Connected to Chat');
     const req = socket.request;
+    const { headers: { referer } } = req
 
-    // socket.join(roomId);
+    const roomId = flow(
+      split('/'),
+      last,
+      replace(/\?.+/, '')
+    )(referer);
+
+    socket.join(roomId);
     // socket.to(roomId).emit('join', {
     //   user: 'system',
     //   chat: `${ req.session.uuid }님이 입장하셨습니다.`
@@ -39,22 +48,4 @@ module.exports = (server, app, sessionMiddleware) => {
       // socket.leave(roomId);
     });
   });
-
-  io.on('connection', (socket) => {
-    socket.on('disconnect', () => {
-      clearInterval(socket.interval)
-    })
-
-    socket.on('error', (error) => {
-      console.error(error)
-    })
-
-    socket.on('message-all', (data) => {
-      socket.emit('message-all', data);
-    })
-
-    socket.on('invite', (data) => {
-      console.log(data)
-    })
-  })
 }

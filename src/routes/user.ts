@@ -1,9 +1,25 @@
+export {};
+
+const User = require('../schemas/user');
+
 module.exports = router => {
-  /* 유 목록 */
-  router.get('/user', (req, res) => {
-    res.json([])
+  /* 유저 목록 */
+  router.get('/user', async (req, res, next) => {
+    try {
+      const users = await User.find({})
+
+      res.json({
+        statusText: 'OK',
+        list: users
+      })
+
+      next();
+    } catch (e) {
+      return next(e);
+    }
   });
 
+  /* 로그인 */
   router.post('/user/signin', (req, res, next) => {
     try {
       const userName = req.body.userName;
@@ -27,6 +43,7 @@ module.exports = router => {
     }
   });
 
+  /* 로그아웃 */
   router.post('/user/signout', (req, res, next) => {
     try {
       delete req.session.userName;
