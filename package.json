@@ -1,28 +1,29 @@
 {
   "name": "kakaonibs-talk-server",
   "version": "1.0.0",
-  "main": "app.ts",
+  "main": "server.ts",
   "repository": "https://github.com/Shindongri/kakaonibs-talk-server.git",
   "author": "shindongri <shindongri89@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "netlify-lambda build src/app.ts",
-    "start": "nodemon --exec ts-node ./src/server.ts"
+    "start": "nodemon --exec ts-node src/server.ts"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "lodash": "^4.17.15",
     "mongoose": "^5.9.2",
     "socket.io": "^2.3.0",
-    "socket.io-redis": "^5.2.0",
     "ts-node": "^8.6.2",
     "tslint": "^6.0.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.2",
+    "uuid": "^7.0.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.29",
@@ -33,10 +34,8 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "netlify-lambda": "^1.6.3",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
-    "serverless-http": "^2.3.2",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   }

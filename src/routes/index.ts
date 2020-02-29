@@ -1,11 +1,10 @@
-import * as express from 'express'
-
+const express = require('express');
 const router = express.Router();
 
-router.get('/', (req: express.Request, res: express.Response) => {
-  res.json({
-    status: 200
-  })
-});
+const user = require('./user')(router);
+const room = require('./room')(router);
 
-module.exports = router;
+router.use('/user', user);
+router.use('/room', room);
+
+module.exports = router
