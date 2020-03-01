@@ -1,5 +1,6 @@
 const { split, flow, replace, size, last } = require('lodash/fp');
 const SocketIO = require('socket.io');
+const axios = require('axios');
 
 module.exports = (server, app, sessionMiddleware) => {
   const io = SocketIO(server, { path: '/socket.io' });
@@ -28,8 +29,9 @@ module.exports = (server, app, sessionMiddleware) => {
   /* Chat Namespace */
   chat.on('connection', (socket) => {
     console.log('Connected to Chat');
+
     const req = socket.request;
-    const { headers: { referer } } = req
+    const { headers: { referer } } = req;
 
     const roomId = flow(
       split('/'),
@@ -37,15 +39,27 @@ module.exports = (server, app, sessionMiddleware) => {
       replace(/\?.+/, '')
     )(referer);
 
-    socket.join(roomId);
-    // socket.to(roomId).emit('join', {
-    //   user: 'system',
-    //   chat: `${ req.session.uuid }님이 입장하셨습니다.`
-    // })
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected to Chat');
-      // socket.leave(roomId);
+    socket.join(roomId);
+
+    socket.on('disconnect', (data) => {
+      console.log('Disconnected to Chat', data);
+
+      socket.leave(roomId);
+
+      const currentRoom = socket.adapter.rooms[roomId];
+      const cnt = currentRoom ? currentRoom.length: 0;
+
+      /* 빈 방일 경우 방 제거 */
+      if (cnt === 0) {
+        axios.delete(`${ process.env.API_HOST }/room/${ roomId }`)
+          .then(() => {
+            console.log('Delete Empty Room.');
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      }
     });
   });
 }

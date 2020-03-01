@@ -79,6 +79,41 @@ module.exports = (router) => {
     }
   });
 
+  /* 채팅방 삭제 */
+  router.delete('/room/:roomId', async (req, res, next) => {
+    try {
+      const roomId = req.params.roomId;
+
+      const room = Room.findById({ _id: roomId });
+
+      room.delete();
+
+      res.json({
+        statusText: 'OK'
+      })
+    } catch (e) {
+      // return next(e);
+    }
+  });
+
+  router.post('/room/:roomId/invite', async (req, res, next) => {
+    try {
+      const roomId = req.params.roomId;
+      const opponentUUID = req.body.opponent;
+
+      const room = await Room.findById({ _id: roomId });
+
+      await room.update({ opponent: opponentUUID });
+
+      res.json({
+        statusText: 'OK',
+        detail: room
+      })
+    } catch (e) {
+      return next(e);
+    }
+  })
+
   /* 채팅하기 */
   router.post('/room/:roomId/chat', async (req, res, next) => {
     try {
