@@ -27,14 +27,15 @@ mongoose.connect(process.env.MONGO_URI, {
 const PORT = process.env.PORT || 8080;
 const sessionMiddleware = session({
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 60 * 60
   }),
   cookie : {
-    secure: false
+    secure: false,
+    httpOnly: true,
   }
 })
 

@@ -39,6 +39,7 @@ module.exports = (router) => {
         res.json({
           statusText: 'OK',
           detail: {
+            title: room.title,
             me: req.session.uuid,
             chatList,
             opponent,
@@ -63,6 +64,7 @@ module.exports = (router) => {
     try {
       const room = new Room({
         owner: req.session.uuid,
+        title: req.body.title
       });
 
       const newRoom = await room.save();
