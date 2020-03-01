@@ -15,7 +15,7 @@ const routes = require('./routes');
 
 /* Connect to Mongo DB */
 mongoose.connect(process.env.MONGO_URI, {
-  dbName: 'admin',
+  dbName: process.env.MONGO_DB,
 }, (error) => {
   if (error) {
     console.log('DB Connection Fail.', error);

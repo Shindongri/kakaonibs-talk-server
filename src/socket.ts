@@ -39,27 +39,25 @@ module.exports = (server, app, sessionMiddleware) => {
       replace(/\?.+/, '')
     )(referer);
 
-
     socket.join(roomId);
 
-    socket.on('disconnect', (data) => {
-      console.log('Disconnected to Chat', data);
-
-      socket.leave(roomId);
-
-      const currentRoom = socket.adapter.rooms[roomId];
+    socket.on('leave', (roomId) => {
+      const currentRoom = socket.adapter.rooms[socket.id];
       const cnt = currentRoom ? currentRoom.length: 0;
 
       /* 빈 방일 경우 방 제거 */
       if (cnt === 0) {
         axios.delete(`${ process.env.API_HOST }/room/${ roomId }`)
-          .then(() => {
-            console.log('Delete Empty Room.');
-          })
           .catch((e) => {
             console.error(e);
           });
       }
+    })
+
+    socket.on('disconnect', (data) => {
+      console.log('Disconnected to Chat');
+
+      socket.leave(roomId);
     });
   });
 }

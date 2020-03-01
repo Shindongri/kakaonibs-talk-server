@@ -82,20 +82,13 @@ module.exports = (router) => {
   /* 채팅방 삭제 */
   router.delete('/room/:roomId', async (req, res, next) => {
     try {
-      const roomId = req.params.roomId;
-
-      const room = Room.findById({ _id: roomId });
-
-      room.delete();
-
-      res.json({
-        statusText: 'OK'
-      })
+      await Room.deleteOne({ _id: req.params.roomId });
     } catch (e) {
-      // return next(e);
+      return next(e);
     }
   });
 
+  /* 채팅방 초대 */
   router.post('/room/:roomId/invite', async (req, res, next) => {
     try {
       const roomId = req.params.roomId;
