@@ -27,16 +27,15 @@ module.exports = (router) => {
       const roomId = req.params.roomId;
       const room = await Room.findById({ _id: roomId });
 
-      const chatList = await Chat.find({ room: room._id }).sort('updatedAt');
-      const opponent = await User.findById({ _id: room.opponent })
+      if (room) {
+        const chatList = await Chat.find({ room: room._id }).sort('updatedAt');
 
-      if (!room) {
-        res.status(500).json({
-          statusText: 'ERROR',
-          error: true,
-          errorMessage: '존재하지 않는 방입니다.'
-        })
-      } else {
+        let opponent = {};
+
+        if (room.opponent) {
+          opponent = await User.findById({ _id: room.opponent });
+        }
+
         res.json({
           statusText: 'OK',
           detail: {
@@ -45,6 +44,11 @@ module.exports = (router) => {
             opponent,
             room
           }
+        });
+      } else {
+        res.json({
+          statusText: 'OK',
+          detail: req.session.uuid
         })
       }
 
@@ -58,7 +62,6 @@ module.exports = (router) => {
   router.post('/room', async (req, res, next) => {
     try {
       const room = new Room({
-        opponent: req.body.opponent || null,
         owner: req.session.uuid,
       });
 
