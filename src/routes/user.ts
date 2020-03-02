@@ -1,6 +1,7 @@
-export {};
+export {}
 
-const User = require('../schemas/user');
+const User = require('../schemas/user')
+const { v4 } = require('uuid')
 
 module.exports = router => {
   /* 유저 목록 */
@@ -10,54 +11,54 @@ module.exports = router => {
 
       res.json({
         statusText: 'OK',
-        list: users
+        list: users,
       })
 
-      next();
+      next()
     } catch (e) {
-      return next(e);
+      return next(e)
     }
-  });
+  })
 
   /* 로그인 */
   router.post('/user/signin', (req, res, next) => {
     try {
-      const userName = req.body.userName;
-      const uuid = req.body.uuid;
+      const userName = req.body.userName
+      const uuid = v4()
 
-      req.session.userName = userName;
-      req.session.uuid = uuid;
-      req.session.isLogged = true;
+      req.session.userName = userName
+      req.session.uuid = uuid
+      req.session.isLogged = true
       req.session.save(() => {
         res.json({
           statusText: 'OK',
           user: {
             userName,
             uuid,
-            isLogged: true
-          }
+            isLogged: true,
+          },
         })
-      });
+      })
     } catch (e) {
-      return next(e);
+      return next(e)
     }
-  });
+  })
 
   /* 로그아웃 */
   router.post('/user/signout', (req, res, next) => {
     try {
-      delete req.session.userName;
-      delete req.session.uuid;
-      delete req.session.isLogged;
+      delete req.session.userName
+      delete req.session.uuid
+      delete req.session.isLogged
       req.session.save(() => {
         res.json({
-          statusText: 'OK'
+          statusText: 'OK',
         })
-      });
+      })
     } catch (e) {
-      return next(e);
+      return next(e)
     }
   })
 
-  return router;
-};
+  return router
+}
