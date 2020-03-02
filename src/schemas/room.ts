@@ -1,16 +1,18 @@
-export {};
-const mongoose = require('mongoose');
+export {}
+const mongoose = require('mongoose')
 
-const { Schema } = mongoose;
-const { Types: { ObjectId } } = Schema;
+const { Schema } = mongoose
+const {
+  Types: { ObjectId },
+} = Schema
 
 const roomSchema = new Schema({
   title: {
-    type: String
+    type: String,
   },
   opponent: {
     type: ObjectId,
-    ref: 'User'
+    ref: 'User',
   },
   owner: {
     type: String,
@@ -20,6 +22,6 @@ const roomSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-});
+})
 
-module.exports = mongoose.model('Room', roomSchema);
+module.exports = mongoose.model('Room', roomSchema)
