@@ -1,5 +1,5 @@
 import * as express from 'express'
-
+import * as path from 'path'
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const bodyParser = require('body-parser')
@@ -38,7 +38,7 @@ const sessionMiddleware = session({
   secret: process.env.COOKIE_SECRET,
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
-    ttl: 60 * 60,
+    ttl: 60 * 60 * 1,
   }),
   cookie: {
     path: '/',
@@ -55,6 +55,7 @@ app.use(
     credentials: true,
   }),
 )
+app.use('/image', express.static(path.join(__dirname, 'uploads')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.COOKIE_SECRET))

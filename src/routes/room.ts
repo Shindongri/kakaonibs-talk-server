@@ -1,5 +1,9 @@
 export {}
 
+const multer = require('multer')
+const path = require('path')
+const fs = require('fs')
+
 const User = require('../schemas/user')
 const Room = require('../schemas/room')
 const Chat = require('../schemas/chat')
@@ -116,6 +120,51 @@ module.exports = router => {
         room: req.params.roomId,
         user: req.session.uuid,
         chat: req.body.chat,
+      })
+
+      await chat.save()
+
+      const io = req.app.get('io')
+
+      io.of('/chat')
+        .to(req.params.roomId)
+        .emit('chat', chat)
+
+      res.json({
+        statusText: 'OK',
+      })
+    } catch (e) {
+      return next(e)
+    }
+  })
+
+  fs.readdir('uploads', error => {
+    if (error) {
+      console.error('Upload Folder Not Found.')
+      fs.mkdirSync('uploads')
+    }
+  })
+
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination(req, file, cb) {
+        cb(null, 'uploads/')
+      },
+      filename(req, file, cb) {
+        const ext = path.extname(file.originalname)
+        cb(null, path.basename(file.originalname, ext) + new Date().valueOf() + ext)
+      },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 },
+  })
+
+  /* 이미지 전송 */
+  router.post('/room/:roomId/image', upload.single('image'), async (req, res, next) => {
+    try {
+      const chat = new Chat({
+        room: req.params.roomId,
+        user: req.session.uuid,
+        image: req.file.filename,
       })
 
       await chat.save()
