@@ -82,6 +82,7 @@ _- Room_
 - [DELETE] 채팅방 제거 (`/room/:roomId`)
 - [POST] 채팅방 초대 (`/room/:roomId/invite`)
 - [POST] 채팅하기 (`/room/:roomId/chat`)
+- [POST] 이미지 전송하 (`/room/:roomId/image`)
 
 _- User_
 
