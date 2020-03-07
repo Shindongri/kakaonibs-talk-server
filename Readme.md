@@ -30,7 +30,6 @@ $ yarn (install)
 PORT = 8080
 COOKIE_SECRET = @#@$KAKAONIBS#@$#$
 MONGO_URI = mongodb+srv://kakao:166366@cluster0-dxrc8.mongodb.net
-API_HOST = http://localhost:8080
 MONGO_DB = kakao
 ```
 

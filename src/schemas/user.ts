@@ -1,5 +1,6 @@
 export {}
 const mongoose = require('mongoose')
+const { v4 } = require('uuid')
 
 const { Schema } = mongoose
 const userSchema = new Schema({
@@ -7,8 +8,9 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  thumbnailURL: {
+  uuid: {
     type: String,
+    default: v4(),
   },
   createdAt: {
     type: Date,

@@ -19,7 +19,8 @@ module.exports = (server, app, sessionMiddleware) => {
 
   /* Room Namespace */
   room.on('connection', socket => {
-    console.log('Connected to Room')
+    console.log('Connected to Room', socket.id)
+
     socket.on('disconnect', () => {
       console.log('Disconnected to Room')
     })
@@ -27,7 +28,7 @@ module.exports = (server, app, sessionMiddleware) => {
 
   /* Chat Namespace */
   chat.on('connection', socket => {
-    console.log('Connected to Chat')
+    console.log('Connected to Chat', socket.id)
     const req = socket.request
     const {
       headers: { referer },
@@ -43,7 +44,7 @@ module.exports = (server, app, sessionMiddleware) => {
 
       /* 빈 방일 경우 방 제거 */
       if (cnt === 0) {
-        axios.delete(`${process.env.API_HOST}/room/${roomId}`).catch(e => {
+        axios.delete(`/room/${roomId}`).catch(e => {
           console.error(e)
         })
       }

@@ -4,7 +4,7 @@ const User = require('../schemas/user')
 const { v4 } = require('uuid')
 
 module.exports = router => {
-  /* 유저 목록 */
+  /* 친구 목록 */
   router.get('/user', async (req, res, next) => {
     try {
       const users = await User.find({})
@@ -21,14 +21,18 @@ module.exports = router => {
   })
 
   /* 로그인 */
-  router.post('/user/signin', (req, res, next) => {
+  router.post('/user/signin', async (req, res, next) => {
     try {
       const userName = req.body.userName
       const uuid = v4()
+      const user = await User({ userName, uuid })
+
+      user.save()
 
       req.session.userName = userName
       req.session.uuid = uuid
       req.session.isLogged = true
+
       req.session.save(() => {
         res.json({
           statusText: 'OK',

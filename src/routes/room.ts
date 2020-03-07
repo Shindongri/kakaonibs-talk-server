@@ -4,7 +4,6 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-const User = require('../schemas/user')
 const Room = require('../schemas/room')
 const Chat = require('../schemas/chat')
 
@@ -12,7 +11,7 @@ module.exports = router => {
   /* 채팅방 목록 */
   router.get('/room', async (req, res, next) => {
     try {
-      const rooms = await Room.find({}).populate('opponent')
+      const rooms = await Room.find({})
 
       res.json({
         statusText: 'OK',
@@ -34,19 +33,12 @@ module.exports = router => {
       if (room) {
         const chatList = await Chat.find({ room: room._id }).sort('updatedAt')
 
-        let opponent = {}
-
-        if (room.opponent) {
-          opponent = await User.findById({ _id: room.opponent })
-        }
-
         res.json({
           statusText: 'OK',
           detail: {
             title: room.title,
             me: req.session.uuid,
             chatList,
-            opponent,
             room,
           },
         })
@@ -98,11 +90,12 @@ module.exports = router => {
   router.post('/room/:roomId/invite', async (req, res, next) => {
     try {
       const roomId = req.params.roomId
-      const opponentUUID = req.body.opponent
+      // const to = req.body.tarsocketId
 
       const room = await Room.findById({ _id: roomId })
+      const io = req.app.get('io')
 
-      await room.update({ opponent: opponentUUID })
+      io.of('/room').emit('invite', roomId)
 
       res.json({
         statusText: 'OK',
