@@ -7,7 +7,8 @@ module.exports = router => {
   /* 친구 목록 */
   router.get('/user', async (req, res, next) => {
     try {
-      const users = await User.find({})
+      const uuid = req.session.uuid
+      const users = await User.find({ uuid: { $ne: uuid } })
 
       res.json({
         statusText: 'OK',
