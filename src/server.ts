@@ -2,7 +2,6 @@ import * as express from 'express'
 import * as path from 'path'
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const flash = require('connect-flash')
 const mongoose = require('mongoose')
@@ -55,9 +54,10 @@ app.use(
     credentials: true,
   }),
 )
-app.use('/image', express.static(path.join(__dirname, 'uploads')))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use('/image', express.static(path.resolve(__dirname, '../uploads')))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(sessionMiddleware)
 app.use(flash())
